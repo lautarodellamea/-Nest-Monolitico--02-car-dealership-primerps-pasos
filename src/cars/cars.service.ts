@@ -1,23 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Car } from './interfaces/car.interface';
+import { v4 as uuid } from 'uuid'
+import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto';
 
 @Injectable()
 export class CarsService {
 
-  private cars = [
+  private cars: Car[] = [
     {
-      id: 1,
+      id: uuid(),
       brand: 'Toyota',
-      name: 'Corolla'
+      model: 'Corolla'
     },
     {
-      id: 2,
+      id: uuid(),
       brand: 'Nissan',
-      name: 'Almera'
+      model: 'Almera'
     },
     {
-      id: 3,
+      id: uuid(),
       brand: 'Ford',
-      name: 'Mustang'
+      model: 'Mustang'
     }
   ]
 
@@ -26,7 +30,7 @@ export class CarsService {
     return this.cars;
   }
 
-  public findOne(id: number) {
+  public findOne(id: string) {
     const car = this.cars.find(car => car.id === id);
 
 
@@ -40,5 +44,53 @@ export class CarsService {
     return car
   }
 
+  public create(createCarDto: CreateCarDto) {
+
+    const newCar = {
+      id: uuid(),
+      brand: createCarDto.brand,
+      model: createCarDto.model
+    }
+    this.cars.push(newCar)
+
+
+
+    return newCar
+
+  }
+
+  public update(id: string, updateCarDto: UpdateCarDto) {
+
+    let carDB = this.findOne(id);
+
+    if (updateCarDto.id && updateCarDto.id !== id) {
+      throw new BadRequestException(`No puedes cambiar el id del auto esto esta protegido`)
+    }
+
+    this.cars = this.cars.map(car => {
+      if (car.id === id) {
+
+        carDB = {
+          ...carDB,
+          ...updateCarDto,
+          id
+        }
+        return carDB
+      }
+      return car
+    })
+
+    return carDB
+
+  }
+
+  public delete(id: string) {
+    const car = this.findOne(id);
+
+    this.cars = this.cars.filter(car => car.id !== id);
+
+    // return ` El auto con id: ${id} ha sido eliminado.`
+
+  }
 
 }
