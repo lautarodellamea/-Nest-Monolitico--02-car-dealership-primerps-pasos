@@ -8,23 +8,22 @@ import { UpdateCarDto } from './dto';
 export class CarsService {
 
   private cars: Car[] = [
-    {
-      id: uuid(),
-      brand: 'Toyota',
-      model: 'Corolla'
-    },
-    {
-      id: uuid(),
-      brand: 'Nissan',
-      model: 'Almera'
-    },
-    {
-      id: uuid(),
-      brand: 'Ford',
-      model: 'Mustang'
-    }
-  ]
-
+    // {
+    //   id: uuid(),
+    //   brand: 'Toyota',
+    //   model: 'Corolla'
+    // },
+    // {
+    //   id: uuid(),
+    //   brand: 'Nissan',
+    //   model: 'Almera'
+    // },
+    // {
+    //   id: uuid(),
+    //   brand: 'Ford',
+    //   model: 'Mustang'
+    // }
+  ];
 
   public findAll() {
     return this.cars;
@@ -45,18 +44,14 @@ export class CarsService {
   }
 
   public create(createCarDto: CreateCarDto) {
-
     const newCar = {
       id: uuid(),
       brand: createCarDto.brand,
-      model: createCarDto.model
-    }
-    this.cars.push(newCar)
+      model: createCarDto.model,
+    };
+    this.cars.push(newCar);
 
-
-
-    return newCar
-
+    return newCar;
   }
 
   public update(id: string, updateCarDto: UpdateCarDto) {
@@ -86,11 +81,11 @@ export class CarsService {
 
   public delete(id: string) {
     const car = this.findOne(id);
-
-    this.cars = this.cars.filter(car => car.id !== id);
-
+    this.cars = this.cars.filter((car) => car.id !== id);
     // return ` El auto con id: ${id} ha sido eliminado.`
-
   }
 
+  fillCarsWithSeedData(cars: Car[]) {
+    this.cars = cars;
+  }
 }
